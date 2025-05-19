@@ -12,7 +12,7 @@
 
 // LED 灯带配置
 #define LED_PIN D4
-#define LED_COUNT 20
+#define LED_COUNT 35
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 // MQTT 服务器配置
