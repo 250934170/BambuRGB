@@ -268,6 +268,11 @@ void sendFileInChunks(const char* filepath) {
   }
 }
 
+// 看门狗中断
+void watchdogCallback() {
+  unsigned long currentMillis = millis();
+}
+
 bool isConfigValid() {
   return strlen(uid) > 0 && strlen(accessToken) > 0 && strlen(deviceID) > 0;
 }
@@ -1001,10 +1006,6 @@ void handleResetConfig() {
   isWebServing = false;
   delay(1000);
   ESP.restart();
-}
-
-void watchdogCallback() {
-  // 实际要执行的内容，比如重置某个计数器
 }
 
 void handleSwitchMode() {
