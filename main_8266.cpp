@@ -1003,6 +1003,10 @@ void handleResetConfig() {
   ESP.restart();
 }
 
+void watchdogCallback() {
+  // 实际要执行的内容，比如重置某个计数器
+}
+
 void handleSwitchMode() {
   if (!checkClientAccess()) {
     server.send(403, "text/html", "<h1>访问被拒绝</h1><p>另一个设备正在配置。</p>");
