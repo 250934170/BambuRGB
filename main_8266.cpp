@@ -268,11 +268,6 @@ void sendFileInChunks(const char* filepath) {
   }
 }
 
-// 看门狗中断
-void watchdogCallback() {
-  unsigned long currentMillis = millis();
-}
-
 bool isConfigValid() {
   return strlen(uid) > 0 && strlen(accessToken) > 0 && strlen(deviceID) > 0;
 }
@@ -612,7 +607,12 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     if (printerState.containsKey("layer_num")) {
       layerNum = printerState["layer_num"].as<int>();
     }
-
+    if (gcodeState == "FINISH" || printPercent >= 99) {
+      Serial.println("打印完成或进度达 99%，切换至待机模式");
+      currentState = CONNECTED_PRINTER;  // 切换至待机
+      lastModeJudgmentTime = millis();   // 重置状态时间戳
+      return;  // 提前返回，避免落入下面的判断逻辑
+    }
     if (forcedMode == NONE) {
       if (isPrinting()) {
         currentState = PRINTING;
@@ -1006,6 +1006,10 @@ void handleResetConfig() {
   isWebServing = false;
   delay(1000);
   ESP.restart();
+}
+
+void watchdogCallback() {
+  // 实际要执行的内容，比如重置某个计数器
 }
 
 void handleSwitchMode() {
